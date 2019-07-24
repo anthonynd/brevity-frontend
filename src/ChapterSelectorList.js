@@ -1,4 +1,6 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
+import { post } from 'axios';
 import { Button, Form } from 'react-bootstrap';
 import './ChapterSelectorList.css';
 
@@ -6,7 +8,7 @@ class ChapterSelectorList extends React.Component {
   constructor(props) {
     super(props);
     this.props = props;
-    this.state = {};
+    this.state = { goToSummary: false };
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -24,7 +26,12 @@ class ChapterSelectorList extends React.Component {
       return selected;
     }, []);
 
-    alert(selectedChapters);
+    const reqBody = { ...this.props.location.state.data, chapters: selectedChapters };
+
+    post("http://localhost:8080/upload/chapters", reqBody).then(res => {
+      console.log(res.data);
+      this.setState({ goToSummary: true, data: { summaries: res.data.chpTextMap } });
+    });
   }
 
   chapterItems(chapters) {
@@ -45,14 +52,17 @@ class ChapterSelectorList extends React.Component {
   }
 
   render() {
-    const { chapters } = this.props.location.state ? this.props.location.state : [];
+    const { chapters } = this.props.location.state.data ? this.props.location.state.data : [];
 
     return (
-      <Form onSubmit={this.handleSubmit}>
-        <h4><Form.Label>Select chapters to summarize</Form.Label></h4>
-        {this.chapterItems(chapters)}
-        <Button variant="primary" type="submit">Select</Button>
-      </Form>
+      <div>
+        <Form onSubmit={this.handleSubmit}>
+          <h4><Form.Label>Select chapters to summarize</Form.Label></h4>
+          {this.chapterItems(chapters)}
+          <Button variant="primary" type="submit">Select</Button>
+        </Form>
+        {this.state.goToSummary && <Redirect to={{ pathname: "/summary", state: this.state.data }} />}
+      </div>
     );
   }
 
