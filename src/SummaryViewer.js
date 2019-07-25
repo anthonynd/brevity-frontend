@@ -15,28 +15,15 @@ class SummaryViewer extends React.Component {
       console.log("props location state", props.location.state);
     } else {
       get("http://localhost:8080/summaries").then(res => {
-        this.setState({ summaries: { "Summary": res.data[0] } });
+        this.setState({ summaries: res.data });
         console.log("standalone", this.state);
-        this.forceUpdate();
       });
     }
-
-    // if (!props.location.state || Object.entries(props.location.state.data).length === 0) {
-    // } else {
-    // }
   }
 
   render() {
-    // const { summary } = props.location.state ? props.location.state : "";
     const summaries = this.state.summaries;
 
-    // return (
-    //   <div>
-    //     <p>{this.state.summary}</p>
-    //   </div>
-    // );
-
-    // Multiple summaries
     return Object.entries(summaries).map(([name, summary]) => {
       return (
         <div key={name}>

@@ -7,7 +7,11 @@ class DocumentUploadForm extends React.Component {
   constructor(props) {
     super(props);
     this.props = props;
-    this.state = { goToChapterSelect: false, goToSummary: false, data: {} };
+    this.state = {
+      goToChapterSelect: false,
+      goToSummary: false,
+      data: {}
+    };
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.fileInput = React.createRef();
@@ -20,11 +24,10 @@ class DocumentUploadForm extends React.Component {
     formData.append("file", this.fileInput.current.files[0]);
 
     post(this.props.endpoint, formData)
-      .then(res => { 
+      .then(res => {
         if (res.data.pdfText !== '') {
           this.setState({ goToSummary: true });
-        }
-        else {
+        } else {
           this.setState({ goToChapterSelect: true, data: res.data });
         }
       });
@@ -36,11 +39,9 @@ class DocumentUploadForm extends React.Component {
         <Form className="upload-form" onSubmit={this.handleSubmit} encType="multipart/form-data">
           <Form.Group controlId="uploadFile">
             <h4><Form.Label>Upload PDF</Form.Label></h4>
-            <Form.Control type="file" ref= {this.fileInput} name="file" />
+            <Form.Control type="file" ref={this.fileInput} name="file" />
           </Form.Group>
-          <Button variant="primary" type="submit">
-            Upload
-          </Button>
+          <Button variant="primary" type="submit">Upload</Button>
         </Form>
         {this.state.goToChapterSelect && <Redirect to={{ pathname: "/chapter-select", state: { data: this.state.data } }} />}
         {this.state.goToSummary && <Redirect to={{ pathname: "/summary", state: { data: this.state.data } }} />}

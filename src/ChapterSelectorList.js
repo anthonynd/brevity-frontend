@@ -8,7 +8,9 @@ class ChapterSelectorList extends React.Component {
   constructor(props) {
     super(props);
     this.props = props;
-    this.state = { goToSummary: false };
+    this.state = {
+      goToSummary: false
+    };
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -21,17 +23,20 @@ class ChapterSelectorList extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    const selectedChapters = Object.entries(this.state).reduce((selected, [chapter, checked]) => {
-      if (checked) selected.push(chapter);
-      return selected;
-    }, []);
 
-    const reqBody = { ...this.props.location.state.data, chapters: selectedChapters };
+    const selectedChapters = Object.entries(this.state)
+      .reduce((selected, [chapter, checked]) => {
+          if (checked) selected.push(chapter);
+          return selected;
+      }, []);
 
-    post("http://localhost:8080/upload/chapters", reqBody).then(res => {
-      console.log(res.data);
-      this.setState({ goToSummary: true, data: { summaries: res.data.chpTextMap } });
-    });
+    const reqBody = {
+      ...this.props.location.state.data,
+      chapters: selectedChapters
+    };
+
+    post("http://localhost:8080/upload/chapters", reqBody)
+      .then(res => this.setState({ goToSummary: true, }));
   }
 
   chapterItems(chapters) {

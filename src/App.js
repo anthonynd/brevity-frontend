@@ -23,14 +23,8 @@ class App extends React.Component {
               exact 
               render={(props) => <DocumentUploadForm {...props} endpoint="http://localhost:8080/upload"/>}
             />
-            <Route 
-              path="/chapter-select" 
-              component={ChapterSelectorList}
-            />
-            <Route
-              path="/summary"
-              component={SummaryViewer}
-            />
+            <Route path="/chapter-select" component={ChapterSelectorList} />
+            <Route path="/summary" component={SummaryViewer} />
           </Container>
         </div>
       </Router>
